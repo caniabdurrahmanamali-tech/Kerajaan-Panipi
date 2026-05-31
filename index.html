@@ -95,16 +95,21 @@
 <img id="karakter" src="karakter.png" alt="Pemandu Wisata">
     
     <!-- KOTAK DIALOG EDUKASI -->
-    <div id="dialog-box">
-        <p id="teks-dialog">"Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah untuk langsung berjalan-jalan virtual melihat wilayah sekitar Makam Raja Panipi!"</p>
-    </div>
-
-    <!-- TOMBOL JALAN-JALAN MENGGUNAKAN LAYANAN MAP OPEN-SOURCE (ANTI BLOKIR & ANTI ERROR) -->
-    <a class="btn-aksi btn-peta" href="https://www.osm.org" target="_blank">🌐 MULAI JALAN-JALAN</a>
+        <!-- KOTAK DIALOG EDUKASI -->
+        <!-- KOTAK DIALOG EDUKASI -->
+<div id="dialog-box">
+    <p id="teks-dialog">Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah!</p>
     
-    <!-- TOMBOL EDUKASI SEJARAH -->
-    <button class="btn-aksi" onclick="gantiTeks()">📜 PELAJARI SEJARAH</button>
+    <!-- Peta sengaja disembunyikan dulu dengan display: none -->
+    <iframe id="peta-game" src="https://openstreetmap.org" style="width: 100%; height: 250px; border: 1px solid #ccc; display: none;"></iframe>
 </div>
+
+<!-- Tombol untuk memunculkan peta -->
+<button class="btn-aksi btn-peta" onclick="bukaPetaDiDalamGame()">MULAI JALAN-JALAN</button>
+
+<!-- Tombol untuk melanjutkan cerita sejarah -->
+<button class="btn-aksi" onclick="gantiTeks()">PELAJARI SEJARAH</button>
+
 
 <script>
     let info = [
@@ -114,16 +119,23 @@
         "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!"
     ];
     let indeks = 0;
-    
-    function gantiTeks() {
+        function gantiTeks() {
         if (indeks < info.length) {
             document.getElementById('teks-dialog').innerText = info[indeks];
             indeks = indeks + 1;
         } else {
             indeks = 0;
-            document.getElementById('teks-dialog').innerText = "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!";
+            document.getElementById('teks-dialog').innerText = "Yuk, bagikan game edukasi...";
         }
-    }
+    } // Kurung kurawal penutup untuk gantiTeks
+
+    function bukaPetaDiDalamGame() {
+        let peta = document.getElementById('peta-game');
+        peta.style.display = 'block';
+        document.getElementById('teks-dialog').innerText = "Berikut adalah peta wilayah Gorontalo. Silakan pelajari lokasinya!";
+    } // Kurung kurawal penutup untuk bukaPetaDiDalamGame
+    } // // Kurung kurawal penutup untuk bukaPetaDiDalamGame
 </script>
 </body>
 </html>
+
