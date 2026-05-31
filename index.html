@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Sejarah Gorontalo</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: Arial, sans-serif; }
+        #game-container { position: relative; width: 100%; height: 100%; }
+        iframe { width: 100%; height: 100%; border: 0; }
+        #karakter-container { position: absolute; bottom: 15px; left: 10px; z-index: 10; display: flex; align-items: flex-end; pointer-events: none; }
+        #karakter { width: 85px; height: auto; pointer-events: auto; }
+        #dialog { background: rgba(255, 255, 255, 0.95); padding: 12px; border-radius: 12px; margin-left: 8px; margin-bottom: 5px; max-width: 200px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); pointer-events: auto; border: 2px solid #28a745; }
+        #dialog p { margin: 0 0 8px 0; font-size: 12px; color: #333; line-height: 1.4; }
+        #dialog button { background: #28a745; color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: bold; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <!-- PETA STREET VIEW SEKITAR BATUDAA GORONTALO -->
+    <iframe src="https://google.com" allowfullscreen="" loading="lazy"></iframe>
+
+    <div id="karakter-container">
+        <!-- FOTO ANDA AKAN MUNCUL DI SINI NANTI -->
+        <img id="karakter" src="karakter.png" alt="Pemandu">
+        <div id="dialog">
+            <p id="teks-dialog">"Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, jalan-jalan di sekitar sini untuk melihat lokasi sekitar!"</p>
+            <button onclick="gantiTeks()">Pelajari Sejarah</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let info = [
+        "Raja Bobihoe memimpin Kerajaan Panipi dan mengobarkan Perang Panipi melawan Belanda pada tahun 1872.",
+        "Akibat perlawanan tersebut, beliau ditangkap lalu diasingkan oleh pihak Belanda.",
+        "Kini, makam Raja Panipi terletak di Desa Barakati, Kecamatan Batudaa, Kabupaten Gorontalo.",
+        "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!"
+    ];
+    let indeks = 0;
+    function gantiTeks() {
+        if(indeks < info.length) {
+            document.getElementById('teks-dialog').innerText = info[indeks];
+            indeks++;
+        } else {
+            indeks = 0;
+            document.getElementById('teks-dialog').innerText = info[indeks];
+        }
+    }
+</script>
+</body>
+</html>
