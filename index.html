@@ -6,7 +6,7 @@
     <title>Petualangan Sejarah Gorontalo</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; text-align: center; }
-        #game-box { width: 90%; max-width: 400px; background: white; padding: 30px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 3px solid #28a745; position: relative; }
+        #game-box { width: 90%; max-width: 400px; background: white; padding: 30px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 3px solid #28a745; position: relative; box-sizing: border-box; }
         #karakter { width: 130px; height: auto; margin-bottom: 15px; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15)); }
         #dialog-box { background: #f8f9fa; padding: 15px; border-radius: 12px; border: 1px solid #ddd; margin-bottom: 20px; }
         #teks-dialog { margin: 0; font-size: 14px; color: #333; line-height: 1.5; font-weight: bold; }
@@ -25,10 +25,10 @@
         <p id="teks-dialog">"Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah untuk langsung berjalan-jalan di lokasi Makam Raja Panipi!"</p>
     </div>
 
-    <!-- TOMBOL UNTUK MULAI JALAN-JALAN -->
-    <a class="btn-aksi btn-peta" href="https://goo.gl" target="_blank">🌐 MULAI JALAN-JALAN (STREET VIEW)</a>
+    <!-- TOMBOL JALAN-JALAN MENGGUNAKAN LINK KOORDINAT BUMI ASLI (ANTI ERROR) -->
+    <a class="btn-aksi btn-peta" href="https://google.com" target="_blank">🌐 MULAI JALAN-JALAN (STREET VIEW)</a>
     
-    <!-- TOMBOL EDUKASI SEJARAH -->
+    <!-- TOMBOL EDUSKASI SEJARAH YANG SUDAH DIPERBAIKI -->
     <button class="btn-aksi" onclick="gantiTeks()">📜 PELAJARI SEJARAH</button>
 </div>
 
@@ -40,13 +40,14 @@
         "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!"
     ];
     let indeks = 0;
+    
     function gantiTeks() {
-        if(indeks < info.length) {
+        if (indeks < info.length) {
             document.getElementById('teks-dialog').innerText = info[indeks];
-            indeks++;
+            indeks = indeks + 1;
         } else {
             indeks = 0;
-            document.getElementById('teks-dialog').innerText = info[indeks];
+            document.getElementById('teks-dialog').innerText = "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!";
         }
     }
 </script>
