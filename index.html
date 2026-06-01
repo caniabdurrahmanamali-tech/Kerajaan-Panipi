@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -65,6 +65,16 @@
             color: #333;
         }
 
+        /* Desain area peta agar rapi di dalam game */
+        #peta-game {
+            width: 100%; 
+            height: 230px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px;
+            display: none; 
+            margin-bottom: 15px;
+        }
+
         .btn-aksi {
             display: block;
             width: 100%;
@@ -96,14 +106,19 @@
 </video>
 
 <div id="game-box">
+    <!-- MUSIK & KARAKTER -->
     <audio id="musik-game" src="lagu.mp3" loop autoplay controls style="width: 100%; margin-bottom: 10px;"></audio>
     <img id="karakter" src="karakter.png" alt="Pemandu Wisata">
     
+    <!-- KOTAK DIALOG EDUKASI -->
     <div id="dialog-box">
         <p id="teks-dialog">Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah!</p>
-        <iframe id="peta-game" src="https://openstreetmap.org" style="width: 100%; height: 250px; border: 1px solid #ccc; display: none; margin-top: 10px;"></iframe>
     </div>
 
+    <!-- PETA (Dipindahkan ke luar dialog-box agar aman dari tindihan teks JavaScript) -->
+    <iframe id="peta-game" src="https://openstreetmap.org"></iframe>
+
+    <!-- TOMBOL AKSI -->
     <button class="btn-aksi btn-peta" onclick="bukaPetaDiDalamGame()">MULAI JALAN-JALAN</button>
     <button class="btn-aksi btn-sejarah" onclick="gantiTeks()">PELAJARI SEJARAH</button>
 </div>
@@ -118,21 +133,25 @@
     let indeks = 0;
 
     function gantiTeks() {
+        // Sembunyikan peta secara otomatis saat tombol sejarah ditekan agar fokus ke cerita
+        document.getElementById('peta-game').style.display = 'none';
+
         if (indeks < info.length) {
             document.getElementById('teks-dialog').innerText = info[indeks];
             indeks = indeks + 1;
         } else {
             indeks = 0;
-            document.getElementById('teks-dialog').innerText = "Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah!";
+            document.getElementById('teks-dialog').innerText = "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!";
         }
     }
 
     function bukaPetaDiDalamGame() {
         let peta = document.getElementById('peta-game');
-        peta.style.display = 'block';
-        document.getElementById('teks-dialog').innerText = "Berikut adalah peta wilayah Gorontalo. Silakan pelajari lokasinya!";
+        peta.style.display = 'block'; // Menampilkan peta
+        document.getElementById('teks-dialog').innerText = "Berikut adalah peta wilayah Kabupaten Gorontalo (Batudaa & Barakati). Silakan pelajari lokasinya!";
     }
 </script>
 
 </body>
 </html>
+       
