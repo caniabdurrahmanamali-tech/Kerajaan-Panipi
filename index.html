@@ -6,110 +6,107 @@
     <title>Petualangan Sejarah Gorontalo</title>
     <style>
         body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #000;
-    overflow: hidden;
-}
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            overflow: hidden;
+        }
 
-#bg-video {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -1;
-    transform: translate(-50%, -50%);
-    object-fit: cover;
-}
+        #bg-video {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
 
-#game-box {
-    position: relative;
-    z-index: 10;
-    width: 90%;
-    max-width: 400px;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
-}
+        #game-box {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
+        }
 
-#karakter {
-    width: 130px;
-    height: auto;
-    margin-bottom: 10px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
+        #karakter {
+            width: 130px;
+            height: auto;
+            margin-bottom: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-#dialog-box {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-}
+        #dialog-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+        }
 
-#teks-dialog {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #333;
-}
+        #teks-dialog {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+        }
 
-.btn-aksi {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 10px;
-    text-align: center;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    color: white;
-    border: none;
-    cursor: pointer;
-    box-sizing: border-box;
-}
+        .btn-aksi {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
 
-.btn-peta {
-    background: #007BFF;
-}
+        .btn-peta {
+            background: #007BFF;
+        }
+
+        .btn-sejarah {
+            background: #28a745;
+        }
     </style>
 </head>
 <body>
+
 <video autoplay muted loop playsinline id="bg-video">
     <source src="video-bg.mp4" type="video/mp4">
 </video>
+
 <div id="game-box">
-    <!-- FOTO KARAKTER ANDA -->
-<audio id="musik-game" src="lagu.mp3" loop autoplay controls style="width: 100%;"></audio>
-<img id="karakter" src="karakter.png" alt="Pemandu Wisata">
+    <audio id="musik-game" src="lagu.mp3" loop autoplay controls style="width: 100%; margin-bottom: 10px;"></audio>
+    <img id="karakter" src="karakter.png" alt="Pemandu Wisata">
     
-    <!-- KOTAK DIALOG EDUKASI -->
-        <!-- KOTAK DIALOG EDUKASI -->
-        <!-- KOTAK DIALOG EDUKASI -->
-<div id="dialog-box">
-    <p id="teks-dialog">Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah!</p>
-    
-    <!-- Peta sengaja disembunyikan dulu dengan display: none -->
-    <iframe id="peta-game" src="https://openstreetmap.org" style="width: 100%; height: 250px; border: 1px solid #ccc; display: none;"></iframe>
+    <div id="dialog-box">
+        <p id="teks-dialog">Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah!</p>
+        <iframe id="peta-game" src="https://openstreetmap.org" style="width: 100%; height: 250px; border: 1px solid #ccc; display: none; margin-top: 10px;"></iframe>
+    </div>
+
+    <button class="btn-aksi btn-peta" onclick="bukaPetaDiDalamGame()">MULAI JALAN-JALAN</button>
+    <button class="btn-aksi btn-sejarah" onclick="gantiTeks()">PELAJARI SEJARAH</button>
 </div>
-
-<!-- Tombol untuk memunculkan peta -->
-<button class="btn-aksi btn-peta" onclick="bukaPetaDiDalamGame()">MULAI JALAN-JALAN</button>
-
-<!-- Tombol untuk melanjutkan cerita sejarah -->
-<button class="btn-aksi" onclick="gantiTeks()">PELAJARI SEJARAH</button>
-
 
 <script>
     let info = [
@@ -119,23 +116,23 @@
         "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!"
     ];
     let indeks = 0;
-        function gantiTeks() {
+
+    function gantiTeks() {
         if (indeks < info.length) {
             document.getElementById('teks-dialog').innerText = info[indeks];
             indeks = indeks + 1;
         } else {
             indeks = 0;
-            document.getElementById('teks-dialog').innerText = "Yuk, bagikan game edukasi...";
+            document.getElementById('teks-dialog').innerText = "Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah!";
         }
-    } // Kurung kurawal penutup untuk gantiTeks
+    }
 
     function bukaPetaDiDalamGame() {
         let peta = document.getElementById('peta-game');
         peta.style.display = 'block';
         document.getElementById('teks-dialog').innerText = "Berikut adalah peta wilayah Gorontalo. Silakan pelajari lokasinya!";
-    } // Kurung kurawal penutup untuk bukaPetaDiDalamGame
-    } // // Kurung kurawal penutup untuk bukaPetaDiDalamGame
+    }
 </script>
+
 </body>
 </html>
-
