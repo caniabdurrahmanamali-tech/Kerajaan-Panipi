@@ -1,9 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Petualangan Sejarah Gorontalo</title>
+    <title>Perjuangan Panipi: Amarah Raja Bobihoe</title>
     <style>
         body {
             margin: 0;
@@ -13,7 +13,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #000;
+            background-color: #111;
             overflow: hidden;
         }
 
@@ -28,73 +28,90 @@
             z-index: -1;
             transform: translate(-50%, -50%);
             object-fit: cover;
+            opacity: 0.2;
         }
 
         #game-box {
             position: relative;
             z-index: 10;
-            width: 90%;
+            width: 95%;
             max-width: 400px;
             background-color: rgba(255, 255, 255, 0.95);
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
+            text-align: center;
+            box-sizing: border-box;
         }
 
-        #karakter {
-            width: 130px;
-            height: auto;
-            margin-bottom: 10px;
+        #gameCanvas {
+            background-color: #2e8b57; /* Lapangan hijau wilayah Panipi */
+            border: 3px solid #333;
+            border-radius: 8px;
             display: block;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto 10px auto;
         }
 
-        #dialog-box {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-        }
-
-        #teks-dialog {
-            margin: 0;
+        #status-teks {
+            font-weight: bold;
             font-size: 14px;
-            line-height: 1.5;
             color: #333;
+            margin: 5px 0;
+            background: #f0f0f0;
+            padding: 5px;
+            border-radius: 5px;
         }
 
-        /* Desain area peta agar rapi di dalam game */
-        #peta-game {
-            width: 100%; 
-            height: 230px; 
-            border: 1px solid #ccc; 
-            border-radius: 8px;
-            display: none; 
-            margin-bottom: 15px;
+        /* Desain Remot Kontrol Digital */
+        .remote-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            max-width: 220px;
+            margin: 10px auto;
         }
 
-        .btn-aksi {
+        .btn-control {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 4px #0056b3;
+        }
+
+        .btn-control:active {
+            box-shadow: 0 1px #0056b3;
+            transform: translateY(3px);
+        }
+
+        .btn-serang {
+            background: #dc3545;
+            box-shadow: 0 4px #bd2130;
+        }
+
+        .btn-serang:active {
+            box-shadow: 0 1px #bd2130;
+        }
+
+        .empty-space {
+            visibility: hidden;
+        }
+
+        .btn-restart {
             display: block;
             width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            text-align: center;
+            padding: 10px;
+            margin-top: 5px;
             border-radius: 5px;
-            text-decoration: none;
             font-weight: bold;
             color: white;
             border: none;
             cursor: pointer;
-            box-sizing: border-box;
-        }
-
-        .btn-peta {
-            background: #007BFF;
-        }
-
-        .btn-sejarah {
             background: #28a745;
         }
     </style>
@@ -106,52 +123,189 @@
 </video>
 
 <div id="game-box">
-    <!-- MUSIK & KARAKTER -->
     <audio id="musik-game" src="lagu.mp3" loop autoplay controls style="width: 100%; margin-bottom: 10px;"></audio>
-    <img id="karakter" src="karakter.png" alt="Pemandu Wisata">
     
-    <!-- KOTAK DIALOG EDUKASI -->
-    <div id="dialog-box">
-        <p id="teks-dialog">Halo! Selamat datang di petualangan sejarah Gorontalo. Yuk, klik tombol biru di bawah!</p>
+    <!-- Indikator Informasi Misi -->
+    <div id="status-teks">Musuh: Portugis | Sisa Pasukan: 5</div>
+    
+    <canvas id="gameCanvas" width="350" height="280"></canvas>
+
+    <!-- REMOT KENDALi & TOMBOL TEMBAK -->
+    <div class="remote-container">
+        <div class="empty-space"></div>
+        <button class="btn-control" onclick="gerakPrajurit('up')">▲</button>
+        <div class="empty-space"></div>
+        
+        <button class="btn-control" onclick="gerakPrajurit('left')">◀</button>
+        <button class="btn-control btn-serang" onclick="tembakPanah()">💥</button>
+        <button class="btn-control" onclick="gerakPrajurit('right')">▶</button>
+        
+        <div class="empty-space"></div>
+        <button class="btn-control" onclick="gerakPrajurit('down')">▼</button>
+        <div class="empty-space"></div>
     </div>
 
-    <!-- PETA (Dipindahkan ke luar dialog-box agar aman dari tindihan teks JavaScript) -->
-    <iframe id="peta-game" src="https://openstreetmap.org"></iframe>
-
-    <!-- TOMBOL AKSI -->
-    <button class="btn-aksi btn-peta" onclick="bukaPetaDiDalamGame()">MULAI JALAN-JALAN</button>
-    <button class="btn-aksi btn-sejarah" onclick="gantiTeks()">PELAJARI SEJARAH</button>
+    <button class="btn-restart" onclick="resetGame()">ULANG PERANG</button>
 </div>
 
 <script>
-    let info = [
-        "Raja Bobihoe memimpin Kerajaan Panipi dan mengobarkan Perang Panipi melawan Belanda pada tahun 1872.",
-        "Akibat perlawanan tersebut, beliau ditangkap lalu diasingkan oleh pihak Belanda.",
-        "Kini, makam Raja Panipi terletak di Desa Barakati, Kecamatan Batudaa, Kabupaten Gorontalo.",
-        "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!"
-    ];
-    let indeks = 0;
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const statusTeks = document.getElementById("status-teks");
 
-    function gantiTeks() {
-        // Sembunyikan peta secara otomatis saat tombol sejarah ditekan agar fokus ke cerita
-        document.getElementById('peta-game').style.display = 'none';
+    // Daftar Level Penjajah
+    const daftarLevel = ["Bangsa Portugis", "Pasukan VOC", "Hindia Belanda", "Tentara Jepang"];
+    let indeksLevel = 0;
+    let gameAktif = true;
 
-        if (indeks < info.length) {
-            document.getElementById('teks-dialog').innerText = info[indeks];
-            indeks = indeks + 1;
-        } else {
-            indeks = 0;
-            document.getElementById('teks-dialog').innerText = "Yuk, bagikan game edukasi ini ke teman-temanmu untuk melestarikan sejarah lokal kita!";
+    // Properti Prajurit Bobihoe (Pemain)
+    let prajurit = { x: 30, y: 120, width: 25, height: 25, speed: 15 };
+    
+    // Senjata & Musuh
+    let amunisiPanah = [];
+    let pasukanMusuh = [];
+    let sisaMusuhLevel Ini = 5;
+
+    // Membuat Pasukan Penjajah Baru
+    function munculkanMusuh() {
+        pasukanMusuh = [];
+        sisaMusuhLevelIni = 5; 
+        for (let i = 0; i < sisaMusuhLevelIni; i++) {
+            pasukanMusuh.push({
+                x: 200 + (Math.random() * 100),
+                y: 30 + (i * 45),
+                width: 20,
+                height: 20,
+                speedY: (Math.random() > 0.5 ? 1 : -1) * (1 + indeksLevel * 0.5)
+            });
         }
+        perbaruiStatus();
     }
 
-    function bukaPetaDiDalamGame() {
-        let peta = document.getElementById('peta-game');
-        peta.style.display = 'block'; // Menampilkan peta
-        document.getElementById('teks-dialog').innerText = "Berikut adalah peta wilayah Kabupaten Gorontalo (Batudaa & Barakati). Silakan pelajari lokasinya!";
+    function perbaruiStatus() {
+        if (!gameAktif) return;
+        statusTeks.innerHTML = `Lawan: ${daftarLevel[indeksLevel]} | Sisa Musuh: ${sisaMusuhLevelIni}`;
     }
-</script>
 
-</body>
-</html>
-       
+    // Fungsi Mengontrol Pergerakan Prajurit Bobihoe
+    function gerakPrajurit(arah) {
+        if (!gameAktif) return;
+        if (arah === 'up' && prajurit.y > 0) prajurit.y -= prajurit.speed;
+        if (arah === 'down' && prajurit.y < canvas.height - prajurit.height) prajurit.y += prajurit.speed;
+        if (arah === 'left' && prajurit.x > 0) prajurit.x -= prajurit.speed;
+        if (arah === 'right' && prajurit.x < canvas.width / 2) prajurit.x += prajurit.speed; // Hanya boleh di area kiri
+    }
+
+    // Fungsi Menembakkan Senjata (Panah/Tombak)
+    function tembakPanah() {
+        if (!gameAktif) return;
+        amunisiPanah.push({
+            x: prajurit.x + prajurit.width,
+            y: prajurit.y + (prajurit.height / 2) - 2,
+            width: 10,
+            height: 4,
+            speedX: 5
+        });
+    }
+
+    // Deteksi Benturan Dua Objek
+    function cekTabrakan(obj1, obj2) {
+        return obj1.x < obj2.x + obj2.width &&
+               obj1.x + obj1.width > obj2.x &&
+               obj1.y < obj2.y + obj2.height &&
+               obj1.y + obj1.height > obj2.y;
+    }
+
+    // Update Logika Game Tiap Detik
+    function update() {
+        if (!gameAktif) return;
+
+        // 1. Gerakkan Amunisi
+        amunisiPanah.forEach((panah, pIndeks) => {
+            panah.x += panah.speedX;
+            if (panah.x > canvas.width) amunisiPanah.splice(pIndeks, 1);
+        });
+
+        // 2. Gerakkan & Kelola Musuh
+        pasukanMusuh.forEach((musuh, mIndeks) => {
+            musuh.y += musuh.speedY;
+            // Memantul di batas atas/bawah layar
+            if (musuh.y <= 0 || musuh.y + musuh.height >= canvas.height) {
+                musuh.speedY *= -1;
+            }
+
+            // Musuh perlahan maju menyerang wilayah Panipi ke kiri
+            musuh.x -= 0.1;
+            if (musuh.x <= 0) {
+                gameAktif = false;
+                statusTeks.innerHTML = "💥 PANIPI DIKUASAI! Game Over. Klik Ulang Perang.";
+            }
+
+            // Cek jika prajurit tertabrak musuh secara fisik
+            if (cekTabrakan(prajurit, musuh)) {
+                gameAktif = false;
+                statusTeks.innerHTML = "💀 PRAJURIT GUGUR! Game Over. Klik Ulang Perang.";
+            }
+
+            // Cek jika tembakan panah mengenai musuh
+            amunisiPanah.forEach((panah, pIndeks) => {
+                if (cekTabrakan(panah, musuh)) {
+                    pasukanMusuh.splice(mIndeks, 1);
+                    amunisiPanah.splice(pIndeks, 1);
+                    sisaMusuhLevelIni--;
+                    perbaruiStatus();
+
+                    // Cek Kondisi Naik Level / Menang Total
+                    if (sisaMusuhLevelIni <= 0) {
+                        indeksLevel++;
+                        if (indeksLevel < daftarLevel.length) {
+                            alert(`🎉 Berhasil mengusir ${daftarLevel[indeksLevel-1]}! Bersiap melawan ${daftarLevel[indeksLevel]}!`);
+                            munculkanMusuh();
+                        } else {
+                            gameAktif = false;
+                            statusTeks.innerHTML = "🇮🇩 MERDEKA! Pasukan Raja Bobihoe Berhasil Mengusir Semua Penjajah!";
+                            alert("Luar biasa! Indonesia Merdeka! 🇮🇩");
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    // Menggambar Objek Grafis Ke Layar
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Batas Pertahanan Panipi (Garis Merah)
+        ctx.strokeStyle = "rgba(255,0,0,0.4)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2, 0);
+        ctx.lineTo(canvas.width / 2, canvas.height);
+        ctx.stroke();
+
+        // Gambar Prajurit Bobihoe (Warna Merah Adat)
+        ctx.fillStyle = "#b22222"; 
+        ctx.fillRect(prajurit.x, prajurit.y, prajurit.width, prajurit.height);
+        
+        // Gambar Amunisi Panah (Kuning)
+        ctx.fillStyle = "#ffd700";
+        amunisiPanah.forEach(panah => {
+            ctx.fillRect(panah.x, panah.y, panah.width, panah.height);
+        });
+
+        // Gambar Pasukan Penjajah (Warna Biru Militer)
+        ctx.fillStyle = "#1e90ff";
+        pasukanMusuh.forEach(musuh => {
+            ctx.fillRect(musuh.x, musuh.y, musuh.width, musuh.height);
+        });
+    }
+
+    function gameLoop() {
+        update();
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
+
+    function resetGame() {
+        indeksLevel = 0;
