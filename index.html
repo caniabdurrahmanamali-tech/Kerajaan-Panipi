@@ -44,7 +44,6 @@
             box-sizing: border-box;
         }
 
-        /* Foto Karakter Kamu */
         #karakter {
             width: 110px;
             height: auto;
@@ -54,7 +53,6 @@
             margin-right: auto;
         }
 
-        /* Kotak Dialog Sejarah */
         #dialog-box {
             background: #f8f9fa;
             padding: 12px;
@@ -75,7 +73,7 @@
             background-color: #2e8b57;
             border: 3px solid #333;
             border-radius: 8px;
-            display: none; /* Sembunyikan dulu saat membaca sejarah */
+            display: none;
             margin: 0 auto 10px auto;
         }
 
@@ -90,9 +88,8 @@
             display: none;
         }
 
-        /* Desain Remot Kontrol Digital */
         .remote-container {
-            display: none; /* Sembunyikan dulu saat membaca sejarah */
+            display: none;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
             max-width: 220px;
@@ -154,24 +151,18 @@
 </video>
 
 <div id="game-box">
-    <!-- MUSIK -->
     <audio id="musik-game" src="lagu.mp3" loop autoplay controls style="width: 100%; margin-bottom: 10px;"></audio>
     
-    <!-- FOTO KAMU / KARAKTER PEMANDU -->
     <img id="karakter" src="karakter.png" alt="Pemandu Wisata">
     
-    <!-- KOTAK DIALOG SEJARAH PENGANTAR -->
     <div id="dialog-box">
         <p id="teks-dialog">Halo! Sebelum berperang, mari kita pelajari sejarahnya. Raja Bobihoe memimpin Kerajaan Panipi dan mengobarkan perang melawan Belanda pada tahun 1872. (Klik tombol biru untuk lanjut membaca sejarah)</p>
     </div>
 
-    <!-- Indikator Informasi Misi -->
     <div id="status-teks">Lawan: Bangsa Portugis | Sisa Musuh: 5</div>
     
-    <!-- Area Perang Canvas -->
     <canvas id="gameCanvas" width="350" height="240"></canvas>
 
-    <!-- REMOT KENDALi & TOMBOL TEMBAK -->
     <div class="remote-container" id="remot-game">
         <div class="empty-space"></div>
         <button class="btn-control" onclick="gerakPrajurit('up')">▲</button>
@@ -186,7 +177,6 @@
         <div class="empty-space"></div>
     </div>
 
-    <!-- TOMBOL ALUR GAME -->
     <button class="btn-aksi btn-sejarah" id="btn-baca" onclick="bacaSejarah()">LANJUT BACA SEJARAH</button>
     <button class="btn-aksi btn-mulai" id="btn-start" onclick="mulaiSesiPerang()">MULAI PERANG SEKARANG!</button>
     <button class="btn-aksi btn-restart" id="btn-ulang" onclick="resetGame()">ULANG PERANG</button>
@@ -197,7 +187,6 @@
     const ctx = canvas.getContext("2d");
     const statusTeks = document.getElementById("status-teks");
 
-    // Array Teks Pelajaran Sejarah Pengantar
     let infoSejarah = [
         "Akibat perlawanan gigih mempertahankan wilayah Panipi, Raja Bobihoe sempat ditangkap dan diasingkan oleh pihak Belanda.",
         "Kini, makam Raja Panipi terletak di Desa Barakati, Kecamatan Batudaa, Kabupaten Gorontalo.",
@@ -205,18 +194,15 @@
     ];
     let indeksSejarah = 0;
 
-    // Alur Level Penjajah
     const daftarLevel = ["Bangsa Portugis", "Pasukan VOC", "Hindia Belanda", "Tentara Jepang"];
     let indeksLevel = 0;
     let gameAktif = false;
 
-    // Properti Prajurit Bobihoe
     let prajurit = { x: 30, y: 100, width: 25, height: 25, speed: 15 };
     let amunisiPanah = [];
     let pasukanMusuh = [];
     let sisaMusuhLevelIni = 5;
 
-    // Fungsi Membaca Cerita Sejarah
     function bacaSejarah() {
         if (indeksSejarah < infoSejarah.length) {
             document.getElementById('teks-dialog').innerText = infoSejarah[indeksSejarah];
@@ -228,7 +214,6 @@
         }
     }
 
-    // Fungsi Masuk ke Sesi Game
     function mulaiSesiPerang() {
         document.getElementById('karakter').style.display = 'none';
         document.getElementById('dialog-box').style.display = 'none';
@@ -244,7 +229,6 @@
         gameLoop();
     }
 
-    // Membuat Pasukan Penjajah Baru
     function munculkanMusuh() {
         pasukanMusuh = [];
         sisaMusuhLevelIni = 5; 
@@ -301,3 +285,21 @@
 
         pasukanMusuh.forEach((musuh, mIndeks) => {
             musuh.y += musuh.speedY;
+            if (musuh.y <= 0 || musuh.y + musuh.height >= canvas.height) {
+                musuh.speedY *= -1;
+            }
+
+            musuh.x -= 0.15; 
+            if (musuh.x <= 0) {
+                gameAktif = false;
+                statusTeks.innerHTML = "💥 PANIPI DIKUASAI! Game Over. Klik Ulang Perang.";
+            }
+
+            if (cekTabrakan(prajurit, musuh)) {
+                gameAktif = false;
+                statusTeks.innerHTML = "💀 PRAJURIT GUGUR! Game Over. Klik Ulang Perang.";
+            }
+
+            amunisiPanah.forEach((panah, pIndeks) => {
+                if (cekTabrakan(panah, musuh)) {
+           
